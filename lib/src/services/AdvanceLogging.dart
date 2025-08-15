@@ -1,20 +1,18 @@
-
-
+import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:advance_flutter_logging/advance_flutter_logging.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:developer' as dev;
 
 class AdvancedLogger {
   static AdvancedLogger? _instance;
-  static AdvancedLogger get instance => _instance ??= AdvancedLogger._internal();
+  static AdvancedLogger get instance =>
+      _instance ??= AdvancedLogger._internal();
 
   factory AdvancedLogger() => instance;
   AdvancedLogger._internal();
@@ -38,8 +36,9 @@ class AdvancedLogger {
       if (_config.enableFileStorage) {
         await Hive.initFlutter();
 
+        // Register adapters BEFORE opening the box
         if (!Hive.isAdapterRegistered(0)) {
-          Hive.registerAdapter(LogLevelAdapter());
+          Hive.registerAdapter(LogEntryAdapter()); // <-- FIXED
         }
         if (!Hive.isAdapterRegistered(1)) {
           Hive.registerAdapter(LogLevelAdapter());
@@ -105,16 +104,40 @@ class AdvancedLogger {
   }
 
   void _logToConsole(LogEntry entry) {
+    // ANSI color codes
+    const reset = '\x1B[0m';
+    const red = '\x1B[31m';
+    const yellow = '\x1B[33m';
+    const green = '\x1B[32m';
+    const magenta = '\x1B[35m';
+    const cyan = '\x1B[36m';
+
+    String color;
+    switch (entry.level) {
+      case LogLevel.debug:
+        color = yellow;
+        break;
+      case LogLevel.info:
+        color = green;
+        break;
+      case LogLevel.warning:
+        color = magenta;
+        break;
+      case LogLevel.error:
+        color = red;
+        break;
+      case LogLevel.critical:
+        color = cyan;
+        break;
+    }
+
     final levelName = entry.level.name.toUpperCase();
     final tag = entry.tag != null ? '[${entry.tag}] ' : '';
-    final emoji = _config.enablePrettyPrint ? '${entry.level.emoji} ' : '';
-    final message = '$emoji$tag${entry.message}';
+    // final emoji = _config.enablePrettyPrint ? '${entry.level.emoji} ' : '';
+    final message = '$tag${entry.message}';
 
-    dev.log(message, name: 'Logger-$levelName');
-
-    if (kDebugMode && _config.enablePrettyPrint) {
-      print('${entry.timestamp.toIso8601String()} [$levelName] $message');
-    }
+    // Pass colored text to dev.log
+    dev.log('$color$message$reset', name: 'Logger-$levelName');
   }
 
   Future<void> _saveToHive(LogEntry entry) async {
@@ -150,9 +173,10 @@ class AdvancedLogger {
 
   /// Get logs by time range
   List<LogEntry> getLogsByTimeRange(DateTime start, DateTime end) {
-    return _logs.where((log) =>
-      log.timestamp.isAfter(start) && log.timestamp.isBefore(end)
-    ).toList();
+    return _logs
+        .where((log) =>
+            log.timestamp.isAfter(start) && log.timestamp.isBefore(end))
+        .toList();
   }
 
   /// Create a log file for export
@@ -166,15 +190,21 @@ class AdvancedLogger {
 
       // Apply filters
       if (levelFilter != null && levelFilter.isNotEmpty) {
-        logsToExport = logsToExport.where((log) => levelFilter.contains(log.level)).toList();
+        logsToExport = logsToExport
+            .where((log) => levelFilter.contains(log.level))
+            .toList();
       }
 
       if (startTime != null) {
-        logsToExport = logsToExport.where((log) => log.timestamp.isAfter(startTime)).toList();
+        logsToExport = logsToExport
+            .where((log) => log.timestamp.isAfter(startTime))
+            .toList();
       }
 
       if (endTime != null) {
-        logsToExport = logsToExport.where((log) => log.timestamp.isBefore(endTime)).toList();
+        logsToExport = logsToExport
+            .where((log) => log.timestamp.isBefore(endTime))
+            .toList();
       }
 
       // Sort by timestamp
@@ -186,10 +216,13 @@ class AdvancedLogger {
       buffer.writeln('Generated: ${DateTime.now().toIso8601String()}');
       buffer.writeln('Total entries: ${logsToExport.length}');
       if (levelFilter != null) {
-        buffer.writeln('Filtered levels: ${levelFilter.map((l) => l.name).join(', ')}');
+        buffer.writeln(
+            'Filtered levels: ${levelFilter.map((l) => l.name).join(', ')}');
       }
-      if (startTime != null) buffer.writeln('Start time: ${startTime.toIso8601String()}');
-      if (endTime != null) buffer.writeln('End time: ${endTime.toIso8601String()}');
+      if (startTime != null)
+        buffer.writeln('Start time: ${startTime.toIso8601String()}');
+      if (endTime != null)
+        buffer.writeln('End time: ${endTime.toIso8601String()}');
       buffer.writeln('');
 
       for (var logEntry in logsToExport) {
@@ -341,9 +374,14 @@ class AdvancedLogger {
   }
 
   // Convenience methods for different log levels
-  void debug(String message, {String? tag}) => log(message, level: LogLevel.debug, tag: tag);
-  void info(String message, {String? tag}) => log(message, level: LogLevel.info, tag: tag);
-  void warning(String message, {String? tag}) => log(message, level: LogLevel.warning, tag: tag);
-  void error(String message, {String? tag}) => log(message, level: LogLevel.error, tag: tag);
-  void critical(String message, {String? tag}) => log(message, level: LogLevel.critical, tag: tag);
+  void debug(String message, {String? tag}) =>
+      log(message, level: LogLevel.debug, tag: tag);
+  void info(String message, {String? tag}) =>
+      log(message, level: LogLevel.info, tag: tag);
+  void warning(String message, {String? tag}) =>
+      log(message, level: LogLevel.warning, tag: tag);
+  void error(String message, {String? tag}) =>
+      log(message, level: LogLevel.error, tag: tag);
+  void critical(String message, {String? tag}) =>
+      log(message, level: LogLevel.critical, tag: tag);
 }
