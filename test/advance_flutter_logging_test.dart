@@ -1,5 +1,5 @@
 // test/advanced_logger_test.dart
-import 'package:flutter_advanced_logging/advance_flutter_logging.dart';
+import 'package:advance_flutter_logging/advance_flutter_logging.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

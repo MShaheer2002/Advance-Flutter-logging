@@ -1,6 +1,6 @@
 
 
-import 'package:flutter_advanced_logging/src/models/LogEntry.dart';
+import 'package:advance_flutter_logging/advance_flutter_logging.dart';
 
 class LoggingConfig {
   final bool enableConsoleOutput;

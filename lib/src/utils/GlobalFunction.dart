@@ -1,7 +1,7 @@
 
 
 // Global convenience functions for easy logging
-import 'package:flutter_advanced_logging/src/services/AdvanceLogging.dart';
+import 'package:advance_flutter_logging/advance_flutter_logging.dart';
 
 void logDebug(String message, {String? tag}) => AdvancedLogger.instance.debug(message, tag: tag);
 void logInfo(String message, {String? tag}) => AdvancedLogger.instance.info(message, tag: tag);

@@ -1,4 +1,4 @@
-library flutter_advanced_logging;
+library advance_flutter_logging;
 
 // Export models
 export 'src/models/LogEntry.dart';
