@@ -1,7 +1,12 @@
-library advance_flutter_logging;
+library flutter_advanced_logging;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+// Export models
+export 'src/models/LogEntry.dart';
+
+// Export services
+export 'src/services/AdvanceLogging.dart';
+
+// Export utils
+export 'src/utils/loggingConfig.dart';
+export 'src/utils/ResponseClass.dart';
+export 'src/utils/GlobalFunction.dart';
