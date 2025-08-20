@@ -2,7 +2,7 @@
 
 > A comprehensive Flutter logging package with multiple log levels, persistent storage, file export, and feedback API integration.
 
-[![pub package](https://img.shields.io/pub/v/flutter_advanced_logger.svg)](https://pub.dev/packages/flutter_advanced_logger)
+[![pub package](https://img.shields.io/pub/v/advance_flutter_logging.svg)](https://pub.dev/packages/advance_flutter_logging)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%9D%A4-blue)](https://flutter.dev/)
 

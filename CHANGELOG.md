@@ -13,3 +13,6 @@
 
 ## 1.0.2
 - upgrade the README
+
+## 1.0.3
+- fixes in README
