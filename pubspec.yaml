@@ -1,6 +1,6 @@
 name: advance_flutter_logging
 description: A comprehensive Flutter logging package with multiple log levels, file export, and feedback API integration.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/MShaheer2002/Advance-Flutter-logging
 
 environment:
