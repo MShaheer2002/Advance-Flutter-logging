@@ -16,3 +16,7 @@
 
 ## 1.0.3
 - fixes in README
+
+
+## 1.0.4
+- added platform support
