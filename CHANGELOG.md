@@ -10,3 +10,6 @@
 - upgrade the Flutter version to latest stable (3.35.1)
 - upgrade dart version to compatible to Flutter (3.9.0)
 - upgrade all the packages version to latest compatible
+
+## 1.0.2
+- upgrade the README
